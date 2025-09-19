@@ -1,93 +1,87 @@
 # IoT_Artmaker
 
+# Introduction
 
+Previously, variations of Arduino-powered magic wand project garnered a lot of attention and became very popular–an easy-to-implement and fun way to record training data and train the model to output inference to the serial monitor on Arduino IDE. This invites users to easily interact with the program utilizing sensors equipped on the Arduino Nano board in creative ways. The project aims to create a smaller-scale immersive visual creation. With a controller and a monitor using web sketch editors, this project allows users to create mesmerizing patterns.
+Rather than using conventional input methods, we will utilize motion to connect the user in the space in an interactive way to increase the interactive potentials of the technologies involved. The Wand is equipped with Arduino Nano BLE board with various onboard sensors including an accelerometer, gyroscope, proximity sensor, humidity and temperature sensor, and more, and serves as an original alternative to regular remote controllers, or keyboards, and mice. Using Arduino libraries including tinyML, the project utilizes various sensors (IMU sensors, temperature & humidity sensor, proximity sensor, etc) to measure the user’s interaction/action in real-time and translate it into 2D visual arts. The user’s movements recorded through the Wand will be reflected in the movements of the visualization imagery.
 
-## Getting started
+![App demo]()
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Technical approach:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- Arduino Nano 33 BLE Sense Rev2 board is used as a controller. Various on-board sensors including IMU, Temperature and Humidity sensor, and Proximity sensor are used to get readings and a button and a LED are connected to the board. These are output to p5.js web editor via serial server/port to control the p5.js sketch that is setup to modify attributes that create visuals.
 
-## Add your files
+- Overall Flow  
+  ![Overall Flow Diagram](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand1.png)
+- tinyML workflow  
+  ![tinyML workflow Diagram](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand2.png)
+- Circuit Diagram: Arduino Nano BLE Sense Rev2, Button, LED  
+  ![Circuit Diagram](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand3.png)  
+  ![Arduino Diagram](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand4.png)
+- Prototype  
+  ![Image of Device Prototype](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand5.png)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Implementation
 
-```
-cd existing_repo
-git remote add origin https://gitlab.engr.illinois.edu/adriane3/iot_artmaker.git
-git branch -M main
-git push -uf origin main
-```
+- Hardware:
+  Arduino Nano BLE Sense Rev 2, Computer, Display, breadboard, LED, button, resisters, and wires.
+- Software, Library & Tools:
+  - Arduino Create Web Editor
+  - Arduino Library:
+    - Arduino_TensorFlowLite
+    - Arduino_BMI270_BMM150 – for IMU Sensor
+    - Arduino_APDS9960 – for Proximity Sensor
+    - Arduino_HS300x – for Temperature and Humidity Sensor
+  - p5.js Web Editor
+  - Serial Communication - p5.serialserver open-source library
+- References:
 
-## Integrate with your tools
+  - [codelabMagicwand Tutorial](https://codelabs.developers.google.com/magicwand#5)
+  - [Arduino Nano BLE Sense Rev2 Tutorials](https://docs.arduino.cc/tutorials/nano-33-ble-sense-rev2/cheat-sheet/) - [Accessing Accelerometer Data on Nano 33 BLE Sense Rev2](https://docs.arduino.cc/tutorials/nano-33-ble-sense-rev2/imu-accelerometer/) - [Accessing Gyroscope Data on Nano 33 BLE Sense Rev2](https://docs.arduino.cc/tutorials/nano-33-ble-sense-rev2/imu-gyroscope/)
+  - [Gesture Recognition with the Nano 33 BLE Sense](https://docs.arduino.cc/tutorials/nano-33-ble-sense-rev2/gesture-sensor/)
+  - [Get Started With Machine Learning on Arduino](https://docs.arduino.cc/tutorials/nano-33-ble-sense-rev2/get-started-with-machine-learning/)
+  - [Neuton.AI model](https://github.com/Neuton-tinyML/magic-wand-neuton-on-tensorflow-data)
+  - P5.js Codes
+    - [CodingTrain-Falling Sand](https://editor.p5js.org/codingtrain/sketches/AoH40T6fV) sketch
+    - Serial implementation adapted from [p5.serial code examples](https://github.com/p5-serial/p5.serialport/tree/main)
 
-- [ ] [Set up project integrations](https://gitlab.engr.illinois.edu/adriane3/iot_artmaker/-/settings/integrations)
+---
 
-## Collaborate with your team
+- Sketch 1: Falling Sand  
+  This sketch is inspired by the Falling Sand simulation. The p5.js sketch is based on Codingtrain’s code (https://editor.p5js.org/codingtrain/sketches/Ij5i7a3w4)
+  Through serial, p5.js receives commands(gesture inferences) from Arduino board and controls the Direction of falling sand, Hue, Saturation, Density of sand grain, Background color, and toggle for Blur.
+  After many attempts to use tinyML tensorflowLT model to control the attributes were unsuccessful due to heavy memory usage on Arduino Nano to handle the inferences and Arduino would freeze and the computer would freeze as well. To reduce the memory usage, I’ve used the model from Neuton.AI (https://github.com/Neuton-tinyML/magic-wand-neuton-on-tensorflow-data) This model was about much lighter and faster with about 1/3 of file size compared to tensorflow model which allowed inference and other sensor readings could be run together.
+  The ML model recognizes three gestures: Wing(\/\/), Slope(/\_), Ring(O)
+  Theses respectively control the Hue value, Direction of falling sand(left or right), Sand grain density(toggle between 0.5 & 0.75)
+  Also, the initial reading of the Temperature and Humidity sensor translates to the starting Hue and Saturation values for the sand.
+  The button toggles apply a blur effect on and off and the proximity sensor toggles between black and white and halt the movement of falling sand for 2 seconds.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- Sketch 2: Educated Toast  
+  This sketch creates a grid of points that are displaced using noise (https://p5js.org/reference/#/p5/noise) and attractor point. The location of the point is manipulated by the Arduino controller left, right, up, and down, and by the distance between this control point, the amount of displacement and translation is computed and visualized. As the attractor point is incremented by the Arduino IMU sensor output, also hue value and saturation value are incremented according to the direction of the movement(right: +, left: -, up: +, down: -) The initial temperature and humidity sensor reading setup the starting hue and saturation values. The proximity sensor reading toggles reset the point field back to a flat state and the button toggles the background color between black and white making the visual more interesting with higher contrast.
 
-## Test and Deploy
+- Sketch 3: Columnar Basalt  
+  This sketch is built on the idea of Educated Toast by introducing WebGL, 3D, Light, and rendering. It uses a similar approach to the relationship between the controlling attributes, colored light, and rotation of the camera are controlled by the Arduino board.
 
-Use the built-in continuous integration in GitLab.
+---
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## Results
 
-***
+- Sketch 1: Falling Sand  
+   ![Sample of Sketch Visuals](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand6.png)
+- Sketch 2: Educated Toast  
+   ![Sample of Sketch Visuals](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand7.png)
+- Sketch 3: Columnar Basalt  
+   ![Sample of Sketch Visuals](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand7.png)
 
-# Editing this README
+## Discussion
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+- What did not work  
+  A lot of resources/tutorials use Arduino Nano BLE 33 Sense, not the new Rev2. There were some significant changes for the libraries(including tensorflowLT, IMU, etc) and some were not compatible with the new Rev2 board. TinyML/Tensorflow has been updated since the tutorial and directory/file structure have changed so debugging took longer than expected. The provided Tensorflow gesture model (using Arduino Nano BLE 33 Sense) was performing very poorly as well with the updated Rev2 board. I had to train a model, however, it turned out to be too heavy for Arduino Nano board to handle inference. The accuracy was much better but the performance was lagging and often resulting crash/freeze after some inference especially when used along with other sensors. So instead of using tinyML/Tensorflow, I found another model that uses Neuton.ai which was much lighter compared to tensorflowLT. There is room to improve in terms of the accuracy and performance of the model, but I was able to run multiple sensor readings and relay that information to p5.js sketch. It was hard to control the p5.js sketch as intended with gestures, in terms of timing and the weight of the gesture on the visual sketch. I created a much simpler control using Temperature & Humidity, Button, LED, and Gyroscope Sensor to measure the tilting of the controller which was much easier to handle and much faster.
+  Also in terms of serial connection, I’ve used the p5.js library tool(p5.serialserver) It worked but sometimes it would require several attempts to make the connection successfully.
 
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- Takeaway  
+  Utilizing the microcontroller to create interesting visuals is a way to connect physical sense to virtual space. There are many different ways to interpret the sensor readings from the Arduino. One of the further development possibilities would be implementing a Bluetooth connection between Arduino and p5.js and getting a custom PCB board to streamline the whole circuit setup. This can lead to placing the unit on the body, head, or hand for example rather than using a handheld device which can lead to a more interesting relationship between the body in physical space and the virtual space.
+  Also, in terms of utilizing tinyML, a better-trained model that is also lighter and faster to infer would be another further development that can help the performance and design of interaction better.
+  It was also a good attempt to create an experience between human and computer and learning that this process needs multi-faceted considerations including figuring out meaningful and intuitive user input/gestures to connect to visual sketch and making the visuals interesting and engaging.
+  Current development does not have an integrated platform and one of the next steps would be building a user interface.
+  There are many possibilities for applications with Arduino Nano board utilizing the onboard sensors and making it part of an interactive art project. This was an enjoyable project. I’ve learned more about Arduino programming, tinyML, and p5.js programming working through this project.
