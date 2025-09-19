@@ -71,7 +71,7 @@ Rather than using conventional input methods, we will utilize motion to connect 
 - Sketch 2: Educated Toast  
    ![Sample of Sketch Visuals](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand7.png)
 - Sketch 3: Columnar Basalt  
-   ![Sample of Sketch Visuals](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand7.png)
+   ![Sample of Sketch Visuals](https://github.com/slyncrafty/laughing-giggle/blob/main/img/wand8.png)
 
 ## Discussion
 
