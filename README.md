@@ -5,7 +5,9 @@
 Previously, variations of Arduino-powered magic wand project garnered a lot of attention and became very popular–an easy-to-implement and fun way to record training data and train the model to output inference to the serial monitor on Arduino IDE. This invites users to easily interact with the program utilizing sensors equipped on the Arduino Nano board in creative ways. The project aims to create a smaller-scale immersive visual creation. With a controller and a monitor using web sketch editors, this project allows users to create mesmerizing patterns.
 Rather than using conventional input methods, we will utilize motion to connect the user in the space in an interactive way to increase the interactive potentials of the technologies involved. The Wand is equipped with Arduino Nano BLE board with various onboard sensors including an accelerometer, gyroscope, proximity sensor, humidity and temperature sensor, and more, and serves as an original alternative to regular remote controllers, or keyboards, and mice. Using Arduino libraries including tinyML, the project utilizes various sensors (IMU sensors, temperature & humidity sensor, proximity sensor, etc) to measure the user’s interaction/action in real-time and translate it into 2D visual arts. The user’s movements recorded through the Wand will be reflected in the movements of the visualization imagery.
 
-![App demo]()
+![App demo](https://github.com/slyncrafty/laughing-giggle/blob/main/img/demo3.gif)  
+![App demo](https://github.com/slyncrafty/laughing-giggle/blob/main/img/demo4.gif)  
+![App demo](https://github.com/slyncrafty/laughing-giggle/blob/main/img/demo5.gif)
 
 ## Technical approach:
 
